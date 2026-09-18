@@ -1,0 +1,1095 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Clawd the Crab, round by round</title>
+<meta name="description" content="A 3D, round-by-round walkthrough of the free Clawd the Crab amigurumi pattern by Chrisette Designs. See what each round should look like before you make it.">
+<meta name="author" content="Andrés, Red Mage">
+<link rel="canonical" href="https://clawd.redmage.cc/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Clawd the Crab, round by round">
+<meta property="og:description" content="A 3D walkthrough of the free Clawd the Crab amigurumi pattern by Chrisette Designs. Every round, built from the instructions.">
+<meta property="og:image" content="og.png">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+  :root {
+    --bg:#0e0f12;          /* the 3D stage */
+    --panel:#15161b;       /* second neutral layer, a touch cooler */
+    --fg:#edebe6;
+    --dim:#9a998f;         /* 4.9:1 on --panel */
+    --hot:#ffc23d;         /* current round, primary action, current step */
+    --line:#262832;
+    --pad:28px;
+  }
+  * { box-sizing:border-box; }
+  html, body { height:100%; }
+  body {
+    margin:0; background:var(--bg); color:var(--fg);
+    font:400 15px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection { background:var(--hot); color:#18140a; }
+  :focus-visible { outline:2px solid var(--hot); outline-offset:2px; }
+
+  #wrap { display:flex; height:100%; }
+  #view { flex:1; min-width:0; }
+  #panel {
+    width:360px; flex:none; background:var(--panel);
+    border-left:1px solid var(--line);
+    display:flex; flex-direction:column; overflow:hidden;
+  }
+
+  /* --- where am I: all three sections, always, at a glance --- */
+  #railtitle { margin:0; padding:var(--pad) var(--pad) 0; font-size:11px;
+             letter-spacing:.09em; text-transform:uppercase; color:#8a8b94; }
+  #rail { padding:12px var(--pad) 22px; border-bottom:1px solid var(--line); }
+  .sec { display:flex; align-items:center; gap:12px; padding:5px 0; }
+  .sec-name {
+    flex:none; width:72px; white-space:nowrap; font-size:12px; letter-spacing:.06em;
+    text-transform:uppercase; color:var(--dim); transition:color .15s;
+  }
+  .sec.here .sec-name { color:var(--fg); }
+  .dots { display:flex; margin-left:-3px; }
+  /* 18x6 bar, 36x22 hit area: small enough to scan, big enough to tap */
+  .dot {
+    width:18px; height:22px; padding:8px 0; margin:0 3px; border:none;
+    background:none; cursor:pointer; -webkit-tap-highlight-color:transparent;
+  }
+  .dot::before {
+    content:''; display:block; height:6px; background:#3a3c47;
+    transition:background .15s, box-shadow .15s;
+  }
+  .dot:hover::before { background:var(--dim); }
+  .dot.past::before { background:#6c6e7b; }
+  .dot.now::before  { background:var(--hot); box-shadow:0 0 0 3px rgba(255,194,61,.16); }
+
+  /* --- what do I do right now --- */
+  #main { flex:1; overflow:auto; padding:32px var(--pad); }
+  #inst {
+    margin:0; font-size:23px; line-height:1.35; font-weight:450;
+    letter-spacing:-.011em; text-wrap:pretty;
+  }
+  #count {
+    margin:20px 0 0; font-size:15px; color:var(--hot);
+    font-variant-numeric:tabular-nums;
+  }
+  #count span { color:var(--dim); }
+
+  #res { margin:40px 0 0; padding:24px 0 0; border-top:1px solid var(--line); }
+  #res h3 {
+    margin:0 0 14px; font-size:12px; font-weight:500; letter-spacing:.06em;
+    text-transform:uppercase; color:var(--dim);
+  }
+  #res ul { list-style:none; margin:0; padding:0; }
+  #res li { margin-bottom:18px; font-size:14px; }
+  #res li b { display:block; font-weight:500; margin-bottom:8px; }
+  #res a {
+    display:inline-block; padding:8px 14px; margin-right:8px;
+    border:1px solid var(--line); color:var(--fg); text-decoration:none;
+    font-size:13px; transition:border-color .15s, color .15s, background .15s;
+  }
+  #res a::after { content:' \2197'; color:var(--dim); }
+  #res a:hover { border-color:var(--hot); color:var(--hot); background:rgba(255,194,61,.07); }
+  #res a:hover::after { color:var(--hot); }
+
+  /* --- how do I move on --- */
+  footer { flex:none; padding:20px var(--pad) var(--pad); border-top:1px solid var(--line); }
+  .nav { display:flex; gap:10px; }
+  .nav button {
+    min-height:52px; padding:14px 18px; font:inherit; font-size:15px;
+    cursor:pointer; display:flex; align-items:center; gap:10px;
+    transition:filter .15s, border-color .15s, color .15s, background .15s;
+  }
+  #next {
+    flex:1; background:var(--hot); border:1px solid var(--hot); color:#18140a;
+    font-weight:600; justify-content:space-between;
+  }
+  #next:hover:not(:disabled) { filter:brightness(1.12); }
+  #next:active:not(:disabled) { filter:brightness(.92); }
+  #next:disabled { background:#23252e; border-color:#23252e; color:var(--dim); cursor:default; }
+  #next em { font-style:normal; opacity:.65; font-weight:500; }
+  #prev {
+    flex:none; background:none; border:1px solid var(--line); color:var(--dim);
+  }
+  #prev:hover:not(:disabled) { border-color:var(--dim); color:var(--fg); }
+  #prev:disabled { color:#4b4d57; border-color:#1d1f27; cursor:default; }
+  .arrow { font-size:19px; line-height:1; }
+
+  #keys { margin:14px 0 0; font-size:12px; color:#86868f; }
+  #keys kbd {
+    font:inherit; color:var(--fg); border:1px solid var(--line);
+    padding:2px 7px; margin:0 1px;
+  }
+
+  #note { margin:16px 0 0; font-size:15px; line-height:1.5; color:var(--dim); }
+  #note:empty { display:none; }
+  #count sub {
+    font-size:13px; vertical-align:baseline; color:var(--dim); margin-left:9px;
+  }
+
+  #credit { margin:16px 0 0; font-size:12px; line-height:1.6; color:#9a998f; }
+  #credit strong { color:var(--fg); font-weight:500; }
+  #openAbout {
+    background:none; border:none; padding:0; font:inherit; font-size:12px;
+    color:var(--dim); text-decoration:underline; text-underline-offset:3px;
+    cursor:pointer;
+  }
+  #openAbout:hover { color:var(--hot); }
+
+  #about {
+    max-width:440px; width:calc(100% - 40px); padding:36px; border:1px solid var(--line);
+    background:var(--panel); color:var(--fg);
+  }
+  #about::backdrop { background:rgba(6,7,9,.78); }
+  #about img { display:block; margin-bottom:22px; }
+  #about h2 { margin:0 0 18px; font-size:24px; font-weight:500; letter-spacing:-.012em; }
+  #about p { margin:0 0 16px; font-size:15px; line-height:1.6; color:#c9c7c1; }
+  #about .fine { font-size:13px; color:var(--dim); margin-bottom:28px; }
+  #about a { color:var(--fg); text-underline-offset:3px; }
+  #about a:hover { color:var(--hot); }
+  #about button {
+    width:100%; min-height:52px; padding:14px; background:var(--hot); border:none;
+    color:#18140a; font:inherit; font-size:15px; font-weight:600; cursor:pointer;
+  }
+  #about button:hover { filter:brightness(1.12); }
+  #credit a { color:var(--dim); }
+
+  .sr-only {
+    position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+    overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0;
+  }
+
+  @media (prefers-reduced-motion:reduce) {
+    *, *::before, *::after { transition-duration:.01ms !important; }
+    #bar div { transition:none; }
+  }
+
+  @media (max-width:820px) {
+    :root { --pad:20px; }
+    #wrap { flex-direction:column; }
+    #view { height:40vh; flex:none; }
+    #panel { width:auto; flex:1; border-left:none; border-top:1px solid var(--line); }
+    #inst { font-size:20px; }
+    #rail { padding:20px var(--pad) 16px; }
+    #main { padding:24px var(--pad); }
+    #res { margin-top:28px; }
+  }
+  /* a phone in landscape has height to spare nowhere: keep the panel beside
+     the view rather than stacking it into a letterbox */
+  @media (max-width:820px) and (orientation:landscape) {
+    #wrap { flex-direction:row; }
+    #view { height:auto; flex:1; }
+    #panel { width:300px; flex:none; border-left:1px solid var(--line); border-top:none; }
+    #inst { font-size:17px; }
+  }
+  @media (max-width:400px) {
+    :root { --pad:16px; }
+    #inst { font-size:18px; }
+    .sec-name { width:auto; min-width:52px; font-size:11px; }
+    #view { height:34vh; }        /* the instruction needs the room more */
+    #keys { display:none; }
+    footer { padding-top:16px; }
+  }
+  /* only stack the buttons when they genuinely cannot sit side by side */
+  @media (max-width:319px) {
+    .nav { flex-wrap:wrap; }
+    #prev, #next { flex:1 1 100%; }
+  }
+  /* a short viewport (phone in landscape, split screen) has no vertical room
+     to spare, so the chrome gives it back to the instruction */
+  @media (max-height:520px) {
+    #railtitle { display:none; }
+    #rail { padding:12px var(--pad) 10px; }
+    .sec { padding:3px 0; }
+    #main { padding:16px var(--pad); }
+    #inst { font-size:16px; }
+    #count { margin-top:10px; }
+    #note { margin-top:8px; font-size:14px; }
+    #res { margin-top:18px; padding-top:14px; }
+    footer { padding:12px var(--pad) 14px; }
+    .nav button { min-height:44px; padding:10px 14px; }
+    #keys, #credit { display:none; }
+  }
+
+  /* no arrow keys to hint at on a touch device */
+  @media (pointer:coarse) { #keys { display:none; } }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <h1 class="sr-only">Clawd the Crab, round by round</h1>
+  <div id="view" role="img" aria-label="Three-dimensional view of the piece"></div>
+  <aside id="panel">
+    <nav aria-labelledby="railtitle">
+      <p class="eyebrow" id="railtitle">Pieces, in order</p>
+      <div id="rail"></div>
+    </nav>
+    <div id="main">
+      <div id="live" aria-live="polite">
+        <h2 id="inst"></h2>
+        <p id="note"></p>
+        <p id="count"></p>
+      </div>
+      <div id="res" hidden><h3>Techniques in this step</h3><ul></ul></div>
+    </div>
+    <footer>
+      <div class="nav">
+        <button id="prev"><span class="arrow">&#8592;</span> Back</button>
+        <button id="next"></button>
+      </div>
+      <p id="keys"><kbd>&#8592;</kbd> <kbd>&#8594;</kbd> to move between steps</p>
+      <p id="credit">
+        <strong>Pattern:</strong> Clawd the Crab by
+        <a href="https://www.chrisettedesigns.com/patterns/clawd-the-crab-free-crochet-pattern/"
+           target="_blank" rel="noopener">Chrisette Designs</a>, free on their site
+        and reproduced here with credit. Written in U.S. stitch terms.<br>
+        <strong>This viewer:</strong> built by Andrés at
+        <a href="https://contra.com/andersthemagi" target="_blank" rel="noopener">Red Mage</a>.
+        <button id="openAbout">About this tool</button>
+      </p>
+    </footer>
+  </aside>
+  <dialog id="about" aria-labelledby="aboutTitle">
+    <img src="logo.png" alt="" width="40" height="43">
+    <h2 id="aboutTitle">See the pattern before you make it</h2>
+    <p>Every round of Clawd the Crab is in here. Each step gives you one
+      instruction and builds the piece in 3D as it should look at that point, so
+      you can hold your work up and compare. Free, no account, runs in this
+      browser.</p>
+    <p>Move between steps with the Back and Next buttons, your keyboard arrow
+      keys, or the step bars in the panel. Drag the model to turn it. Grey is
+      what you have already worked, and the round you are on right now is yellow.</p>
+    <p>The model shows stitch placement and shape, not the texture of real yarn.
+      Yours will look softer than this.</p>
+    <p class="fine">The pattern is by
+      <a href="https://www.chrisettedesigns.com/patterns/clawd-the-crab-free-crochet-pattern/"
+         target="_blank" rel="noopener">Chrisette Designs</a> and is free on their
+      site. This tool was made by Andrés at
+      <a href="https://contra.com/andersthemagi" target="_blank" rel="noopener">Red
+      Mage</a>, a one-person studio in Barcelona that builds things like it for
+      clients.</p>
+    <form method="dialog"><button autofocus>Start crocheting</button></form>
+  </dialog>
+</div>
+
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+            "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { GTAOPass } from 'three/addons/postprocessing/GTAOPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+
+// Verified 2026-09-18. Chrisette's own videos where the pattern embeds one.
+const RES = {
+  ring:   ['Magic ring', 'https://www.youtube.com/watch?v=0SEjxzk5F6Q', 'https://sarahmaker.com/crochet-magic-ring/'],
+  sc:     ['Single crochet (US)', 'https://www.youtube.com/watch?v=80YEYnyw11w', 'https://sarahmaker.com/single-crochet/'],
+  inc:    ['Increase: 2 sc in one st', 'https://www.youtube.com/watch?v=q9uxiXdkrh0', 'https://sarahmaker.com/single-crochet-increase/'],
+  dec:    ['Invisible decrease', 'https://www.youtube.com/watch?v=TiK5i1c-98I', 'https://www.planetjune.com/blog/amigurumi-help/invisible-decrease/'],
+  ch:     ['Chain stitch', 'https://www.youtube.com/watch?v=7v-mssy5rKU', 'https://www.crochet365knittoo.com/slip-stitch/'],
+  sl:     ['Slip stitch', 'https://www.youtube.com/watch?v=tIlYkk8SAyk', 'https://sarahmaker.com/slip-stitch/'],
+  flo:    ['Front / back loop only', 'https://www.youtube.com/watch?v=OJ5O0l05Lyw', 'https://stitchesnscraps.com/front-loop-only-flo-back-loop-only-blo-crochet/'],
+  marker: ['Stitch markers in amigurumi', 'https://www.youtube.com/watch?v=sCpiC-86plQ', 'https://www.planetjune.com/blog/amigurumi-help/how-to-use-stitch-markers-in-amigurumi/'],
+  eyes:   ['6mm safety eyes', 'https://www.youtube.com/watch?v=4DMG5RfufUo', 'https://www.tinycurl.co/safety-eyes-amigurumi/'],
+  spiral: ['Continuous rounds vs joined', 'https://www.youtube.com/watch?v=ZxcVJrLNKPo', 'https://lookatwhatimade.net/crafts/yarn/crochet/crochet-tutorials/how-to-crochet-in-the-round-spiral-vs-joining/'],
+  close:  ['Closing an amigurumi ball', 'https://www.youtube.com/watch?v=xUEzabLQnhE', 'https://www.chrisettedesigns.com/tipsandtricks/the-right-way-to-close-a-crochet-amigurumi-ball/'],
+};
+
+// ---- pattern -------------------------------------------------------------
+// Three sections. Each is walked through round by round and ends with its own
+// finishing step, rather than one line that says "now attach the claws".
+const BODY_PATTERN = [
+  { label: 'Round 1', text: 'Make a magic ring, sc 6 into it. Pull the ring tight.',
+    ops: 'sc x6', help: ['ring', 'sc', 'spiral'] },
+  { label: 'Round 2', text: 'inc x6', ops: 'inc x6', help: ['inc'],
+    note: 'Two stitches into every stitch, all the way round. The circle doubles to 12.' },
+  { label: 'Round 3', text: '(1 sc in the next st, inc) x6', ops: '(sc, inc) x6',
+    note: 'One single crochet, then an increase. Six times. Count 18 at the end, because an error here throws off every round after it.' },
+  { label: 'Round 4', text: '(1 sc in the next 2 sts, inc) x6', ops: '(sc, sc, inc) x6',
+    note: 'Two single crochet, then an increase, which is two stitches worked into one. Six times.' },
+  { label: 'Round 5', text: '1 sc in each st around', ops: 'sc x24', help: ['marker'],
+    note: 'No increases, so the circle stops growing and the sides begin. It is meant to turn into a shallow cup here.' },
+  { label: 'Legs', text: 'In the front loops: (sl st, ch 4, then starting in the ' +
+    '2nd ch from the hook, sl st in the next 3 chs) x3. Sl st in the next 9 sts, ' +
+    'then x3 more, and sl st to the next st.',
+    note: 'Those 9 sl sts between the two sets of legs are Clawd\u2019s front. ' +
+      'Do not fasten off if you are going to close the bottom with a belly.',
+    annot: true, legs: [0,1,2,12,13,14], help: ['flo', 'sl', 'ch'] },
+  { label: 'Eyes', text: 'Insert the 6mm safety eyes between rows 4 and 5, ' +
+    'with 4 sts between them.', annot: true, eyes: true, help: ['eyes'] },
+];
+
+const BELLY_PATTERN = [
+  { label: 'Round 1', text: 'In the back loops: sc in all 24 back loops of the ' +
+    'last body row.', ops: 'sc x24', down: true, help: ['flo'] },
+  { label: 'Round 2', text: '(dec) x12. Stuff with polyfil now, before the hole ' +
+    'gets too small.', ops: 'dec x12', down: true, help: ['dec'],
+    note: 'Work two stitches together, twelve times. The opening halves.' },
+  { label: 'Round 3', text: '(dec) x6', ops: 'dec x6', down: true,
+    note: 'Six more decreases. Only a small hole is left to sew shut.' },
+  { label: 'Close up', text: 'Fasten off with a short tail. Sew the hole shut ' +
+    'through the front loops of the 6 sts, pull tight, hide the tail inside.',
+    annot: true, help: ['close'] },
+];
+
+const CLAW_PATTERN = [
+  { label: 'Round 1', text: 'Make a magic ring, sc 4 into it. Pull it tight.',
+    ops: 'sc x4', help: ['ring'] },
+  { label: 'Round 2', text: 'inc in the next 2 sts. 1 sc in the last 2 sts.',
+    ops: '(inc, inc, sc, sc)', help: ['inc'] },
+  { label: 'Round 3', text: '1 sc in each st around.', ops: 'sc x6' },
+  { label: 'Round 4', text: 'Sc in the next 4 sts. dec.', ops: '(sc, sc, sc, sc, dec)',
+    help: ['dec'], note: 'One decrease starts the taper toward the tip.' },
+  { label: 'Round 5', text: '(dec) x2. Sc in the last st.', ops: '(dec, dec, sc)' },
+  { label: 'Finish', text: 'Ch 2. Fasten off with a tail long enough to sew it on.',
+    annot: true, help: ['ch'] },
+];
+
+// "(sc, inc) x6" / "sc x24" / "sc, inc" -> ['sc','inc',...]
+function parseOps(s) {
+  const out = [];
+  for (const m of s.matchAll(/\(([^)]*)\)\s*x\s*(\d+)|([a-z]+)\s*x\s*(\d+)|([a-z]+)/g)) {
+    if (m[1] !== undefined) {
+      const inner = parseOps(m[1]);
+      for (let i = 0; i < +m[2]; i++) out.push(...inner);
+    } else if (m[3] !== undefined) {
+      for (let i = 0; i < +m[4]; i++) out.push(m[3]);
+    } else out.push(m[5]);
+  }
+  return out;
+}
+
+// Stitch graph: every stitch records which parent loop of the previous round it
+// works into. inc = two stitches into one parent, dec = one stitch over two.
+// This is the amigurumi crochet graph; the solver below turns it into a shape.
+// prevCount / startRi let a later section carry on the same spiral. Without
+// them a second call restarts at "no previous round" and every stitch anchors
+// to parent 0, which cinches the whole round into a single point.
+function buildRounds(pattern, prevCount = 0, startRi = -1) {
+  let prev = prevCount, ri = startRi;
+  return pattern.map(r => {
+    if (r.annot) return { ...r, ri, count: prev };   // eyes, legs, claws: no new round
+    ri++;
+    const ops = parseOps(r.ops), sts = [];
+    let p = 0;
+    for (const op of ops) {
+      // a dec is worked over TWO parent loops and is anchored to both; linking
+      // only the first leaves every other stitch below it unsupported
+      if (op === 'inc') { sts.push({ op, parent: p, parents: [p] },
+                                   { op, parent: p, parents: [p] }); p += 1; }
+      else if (op === 'dec') { sts.push({ op, parent: p, parents: [p, p + 1] }); p += 2; }
+      else { sts.push({ op, parent: p, parents: [p] }); p += 1; }
+    }
+    if (ri === 0) sts.forEach(s => { s.parent = 0; s.parents = [0]; });
+    sts.forEach(s => {
+      s.parents = prev ? s.parents.map(x => x % prev) : [0];
+      s.parent = s.parents[0];
+    });
+    prev = sts.length;
+    return { ...r, ops, sts, ri, count: sts.length };
+  });
+}
+
+const tag = (pat, piece, section, prevCount, startRi) =>
+  buildRounds(pat, prevCount, startRi).map(r => ({ ...r, piece, section }));
+
+const bodySteps = tag(BODY_PATTERN, 'body', 'Body');
+const lastBody  = bodySteps.filter(r => !r.annot).at(-1);
+// the belly is worked into the last body round, so it continues that spiral
+const bellySteps = tag(BELLY_PATTERN, 'body', 'Belly', lastBody.count, lastBody.ri);
+const clawSteps  = tag(CLAW_PATTERN,  'claw', 'Claws');
+const attachStep = { piece: 'body', section: 'Claws', annot: true, claws: true,
+  label: 'Attach', ri: bellySteps.at(-1).ri, count: 0,
+  text: 'Sew the claws on at an angle, pointing in, going through the ch 2 ' +
+        'at the end. Attach each to the outer side of an eye, through the ' +
+        'middle of the sl sts on the bottom of his face.' };
+
+const steps = [...bodySteps, ...bellySteps, ...clawSteps, attachStep];
+const rounds = [...bodySteps, ...bellySteps].filter(r => !r.annot);
+const clawRounds = clawSteps.filter(r => !r.annot);
+const SECTIONS = ['Body', 'Belly', 'Claws'];
+const SECTION_LABEL = { Body: 'Body', Belly: 'Belly', Claws: 'Claws \u00d72' };
+
+console.assert(parseOps('(sc, inc) x6').length === 12, 'parseOps group');
+console.assert(parseOps('sc x24').length === 24, 'parseOps repeat');
+console.assert(rounds[1].count === 12 && rounds[2].count === 18, 'round counts');
+console.assert(new Set(rounds[2].sts.map(s => s.parent)).size === 12, 'round 3 uses all 12 parents');
+console.assert(rounds.length === 8, 'eight worked rounds');
+console.assert(rounds.every((r, i) => r.ri === i), 'belly continues the body spiral');
+console.assert(clawRounds.length === 5 && clawRounds.at(-1).count === 3, 'claw shapes down to 3');
+// the bug this catches: a section that restarts the spiral anchors every
+// stitch to parent 0 and cinches the round shut
+console.assert(new Set(rounds[5].sts.map(x => x.parent)).size === 24,
+  'the belly works into all 24 back loops, not one');
+console.assert(rounds.at(-1).count === 6, 'belly closes to 6 sts');
+console.assert(rounds.at(-1).sts.flatMap(x => x.parents).length === 12,
+  'every dec anchors to two parent loops');
+
+// ---- shape ---------------------------------------------------------------
+// A single crochet is about as tall as it is wide, and the yarn fills most of
+// the cell: too thin and the fabric reads as lace instead of amigurumi.
+// Gauge. Published sc gauge runs 1.00 to 1.25 wide:tall across six worsted
+// ball bands, and amigurumi at a tighter hook sits at the square end, so the
+// cell is square. Yarn radius stays under L/6: past that the yarn interpenetrates
+// itself (Storck et al. 2022, who measured exactly that failure).
+const SW = 0.85, RH = 0.85, YARN = SW / 5.3;
+
+// Analytic seed: each round a circle sized by its stitch count, rise = whatever
+// is left of the row height once the radius has grown. Correct for evenly
+// distributed shaping, and a good starting guess for everything else.
+function seed(rs, top) {
+  const L = [];
+  for (let i = 0; i <= top; i++) {
+    const rad = Math.max(rs[i].count * SW / (2 * Math.PI), 0.3);
+    const dr = i ? rad - L[i-1].rad : 0;
+    const rise = Math.sqrt(Math.max(RH * RH - dr * dr, 0.05));
+    // The whole piece spirals one way: the magic ring is the top of the shell,
+    // every round after it sits lower, and the belly keeps going until it closes
+    // underneath. Seeding the body upward and the belly downward folded the ring
+    // and the closing point into the same space, which no solver can untangle.
+    L.push({ rad, z: i ? L[i-1].z - rise : 0 });
+  }
+  return L;
+}
+
+// Relaxation: stitches are nodes, two springs each (parent in the previous
+// round, previous stitch in this round), plus outward pressure standing in for
+// the polyfil and short-range repulsion for yarn thickness. Gauss-Seidel
+// projection, seeded from the analytic layout so it converges in a few passes.
+// ponytail: O(n^2) repulsion. Fine to ~1500 stitches; grid-hash it past that.
+function solve(rs, top, stuffing = 0.03) {
+  const L = seed(rs, top), P = [], idx = [], links = [];
+  for (let i = 0; i <= top; i++) {
+    idx[i] = [];
+    for (let k = 0; k < rs[i].count; k++) {
+      const a = (k / rs[i].count) * Math.PI * 2 + i * 0.4;
+      idx[i][k] = P.length;
+      P.push(new THREE.Vector3(Math.cos(a) * L[i].rad, L[i].z, Math.sin(a) * L[i].rad));
+    }
+  }
+  for (let i = 0; i <= top; i++) {
+    const n = rs[i].count;
+    for (let k = 0; k < n; k++) {
+      // "pull the ring tight": round 1 crowds tighter than an ordinary round
+      links.push([idx[i][k], idx[i][(k + 1) % n], i ? SW : SW * 0.74, 0.5]);
+      if (i) for (const par of rs[i].sts[k].parents)
+        links.push([idx[i][k], idx[i-1][par], RH, 0.5]);                 // parent loops
+      // Bending resistance, spanning two rounds. Without it the fabric is free
+      // to fold flat back against itself, which is why the belly closed as a
+      // disc instead of curving underneath. Soft, so shaping still wins.
+      if (i > 1) for (const par of rs[i].sts[k].parents) {
+        for (const gp of rs[i-1].sts[par].parents)
+          links.push([idx[i][k], idx[i-2][gp], RH * 2, 0.12, true]);
+      }
+    }
+  }
+  const d = new THREE.Vector3(), c = new THREE.Vector3();
+  const t = new THREE.Vector3(), u = new THREE.Vector3();
+  const norms = P.map(() => new THREE.Vector3());
+  for (let pass = 0; pass < 220; pass++) {
+    for (let twice = 0; twice < 2; twice++) {
+      for (const [a, b, rest, k, pushOnly] of links) {
+        d.subVectors(P[b], P[a]);
+        const len = d.length() || 1e-6;
+        if (pushOnly && len >= rest) continue;   // bending resists folding only
+        const f = ((len - rest) / len) * k;
+        P[a].addScaledVector(d, f); P[b].addScaledVector(d, -f);
+      }
+    }
+    // Stuffing pushes along each stitch's own surface normal, so the flat top
+    // lifts and the closing cap domes under.
+    //
+    // The sign of that normal used to come from a per-node test against the
+    // centroid. That is degenerate while the piece is still an open bowl: the
+    // normal is vertical, the centroid lies in the fabric plane, so the dot
+    // product is ~0 and neighbouring stitches pick opposite signs and tear the
+    // surface apart. It only looked right once the belly gave the piece volume.
+    // cross(tangent, up) is already consistent across the whole surface, so one
+    // global sign is enough, taken from whichever node tests least ambiguously.
+    c.set(0, 0, 0);
+    for (const p of P) c.add(p);
+    c.divideScalar(P.length);
+    let best = 0, flip = 1;
+    for (let i = 1; i <= top; i++) {
+      const n = rs[i].count;
+      for (let k = 0; k < n; k++) {
+        const j = idx[i][k], p = P[j];
+        t.subVectors(P[idx[i][(k + 1) % n]], P[idx[i][(k - 1 + n) % n]]);
+        u.subVectors(p, P[idx[i-1][rs[i].sts[k].parent]]);
+        const nv = norms[j].crossVectors(t, u);
+        if (nv.lengthSq() < 1e-10) { nv.set(0, 0, 0); continue; }
+        nv.normalize();
+        const dot = nv.dot(d.subVectors(p, c));
+        if (Math.abs(dot) > Math.abs(best)) best = dot;
+      }
+    }
+    if (best < 0) flip = -1;
+    for (let i = 1; i <= top; i++)
+      for (let k = 0; k < rs[i].count; k++)
+        P[idx[i][k]].addScaledVector(norms[idx[i][k]], stuffing * flip);
+
+    for (let i = 0; i <= top; i++) {
+      const n = rs[i].count;
+      if (n < 4) continue;
+      const smoothed = [];
+      for (let k = 0; k < n; k++) {
+        smoothed.push(P[idx[i][(k - 1 + n) % n]].clone()
+          .add(P[idx[i][(k + 1) % n]]).multiplyScalar(0.5));
+      }
+      for (let k = 0; k < n; k++) P[idx[i][k]].lerp(smoothed[k], 0.06);
+    }
+    for (let a = 0; a < P.length; a++) {
+      for (let b = a + 1; b < P.length; b++) {
+        d.subVectors(P[b], P[a]);
+        const len = d.lengthSq();
+        if (len > 0 && len < SW * SW * 0.49) {
+          const f = ((SW * 0.7 - Math.sqrt(len)) / Math.sqrt(len)) * 0.25;
+          P[a].addScaledVector(d, -f); P[b].addScaledVector(d, f);
+        }
+      }
+    }
+  }
+  const mid = idx.map(row => row.reduce((a, j) => a.add(P[j]),
+    new THREE.Vector3()).divideScalar(row.length));
+  return { P, idx, mid };
+}
+
+// exposed for measuring the solved shape from the console
+// Records a step-through to a video file, for posting. Console-only on purpose:
+// it is a one-off marketing job, not something a crocheter mid-project needs a
+// button for. window.__dbg.record() and wait; the file downloads when it ends.
+async function record({ hold = 1500, spin = 26, fps = 30 } = {}) {
+  const canvas = renderer.domElement;
+  const type = ['video/mp4;codecs=avc1', 'video/webm;codecs=vp9', 'video/webm']
+    .find(t => MediaRecorder.isTypeSupported(t));
+  if (!type) throw new Error('This browser cannot record the canvas.');
+  const chunks = [];
+  const rec = new MediaRecorder(canvas.captureStream(fps), {
+    mimeType: type, videoBitsPerSecond: 8e6,
+  });
+  rec.ondataavailable = e => e.data.size && chunks.push(e.data);
+  const done = new Promise(r => { rec.onstop = r; });
+
+  const wasOrbited = orbited;
+  orbited = true;                       // hold our own angle through the run
+  show(0);
+  __dbg.view(-18, 26);
+  rec.start();
+  for (let i = 0; i < steps.length; i++) {
+    show(i);
+    const t0 = performance.now();
+    // drift the camera across each hold so the piece reads in three dimensions
+    while (performance.now() - t0 < hold) {
+      const t = (performance.now() - t0) / hold;
+      __dbg.view(-18 + (i + t) * spin / steps.length * 2, 26 + Math.sin(t * Math.PI) * 8);
+      await new Promise(r => requestAnimationFrame(r));
+    }
+  }
+  rec.stop();
+  await done;
+  orbited = wasOrbited;
+  const blob = new Blob(chunks, { type });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `clawd-step-through.${type.includes('mp4') ? 'mp4' : 'webm'}`;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 10000);
+  return `${type}, ${(blob.size / 1e6).toFixed(1)} MB, ${(steps.length * hold / 1000).toFixed(0)}s`;
+}
+
+// one still, for the social preview image
+function snapshot(name = 'og.png') {
+  const a = document.createElement('a');
+  a.href = renderer.domElement.toDataURL('image/png');
+  a.download = name;
+  a.click();
+  return `${renderer.domElement.width}x${renderer.domElement.height}`;
+}
+
+window.__dbg = { record, snapshot, view: (azDeg, elDeg) => {   // orbit to a named angle for review
+  const r = cam.position.distanceTo(controls.target);
+  const az = azDeg * Math.PI / 180, el = elDeg * Math.PI / 180;
+  const f = front.clone().setY(0).normalize();
+  const side = new THREE.Vector3(-f.z, 0, f.x);
+  const dir = f.clone().multiplyScalar(Math.cos(az) * Math.cos(el))
+    .addScaledVector(side, Math.sin(az) * Math.cos(el))
+    .addScaledVector(new THREE.Vector3(0, 1, 0), Math.sin(el)).normalize();
+  cam.position.copy(controls.target).addScaledVector(dir, r);
+  controls.update();
+  return `az ${azDeg} el ${elDeg}`;
+}, get: (top = rounds.length - 1) => {
+  const S = solve(rounds, top);
+  return S.idx.map((row, i) => {
+    const c = S.mid[i];
+    const rs = row.map(j => Math.hypot(S.P[j].x - c.x, S.P[j].z - c.z));
+    return { round: i + 1, sts: row.length,
+      r: +(rs.reduce((a, b) => a + b) / rs.length).toFixed(2),
+      rMin: +Math.min(...rs).toFixed(2), rMax: +Math.max(...rs).toFixed(2),
+      y: +c.y.toFixed(2) };
+  });
+}, eyes: (top = 4) => {
+  const S = solve(rounds, top);
+  const at = (i, k) => S.P[S.idx[i][k % rounds[i].count]];
+  const out = [];
+  for (const k of [5, 10]) {
+    const p = at(4, k).clone();
+    const n = p.clone().sub(S.mid[4]).normalize();
+    p.addScaledVector(n, YARN + 0.26);
+    out.push({ k, pos: [p.x, p.y, p.z].map(v => +v.toFixed(2)),
+      distToCam: +cam.position.distanceTo(p).toFixed(2) });
+  }
+  out.push({ apart: +(new THREE.Vector3().subVectors(
+    new THREE.Vector3(...out[0].pos), new THREE.Vector3(...out[1].pos)).length()).toFixed(2) });
+  return out;
+}, clawPlacement: () => {
+  const S = solve(rounds, rounds.length - 1);
+  const at = (i, k) => S.P[S.idx[i][k % rounds[i].count]];
+  const face = k => at(3, k).clone().lerp(at(4, k), 0.5);
+  const res = [];
+  for (const k of [4, 11]) {
+    const p = face(k).clone();
+    const out = p.clone().sub(S.mid[3]).setY(0).normalize();
+    const dir = new THREE.Vector3(0, 1.25, 0)
+      .addScaledVector(out, 1.0).addScaledVector(front, 0.15).normalize();
+    res.push({ k, tip: +CLAW_TIP.toFixed(2),
+      dir: [dir.x, dir.y, dir.z].map(v => +v.toFixed(2)),
+      elevationDeg: +(Math.asin(dir.y) * 180 / Math.PI).toFixed(1),
+      front: [front.x, front.y, front.z].map(v => +v.toFixed(2)) });
+  }
+  return res;
+}, claw: () => {
+  const S = solve(clawRounds, clawRounds.length - 1, 0.008);
+  return S.idx.map((row, i) => {
+    const c = S.mid[i];
+    const r = row.map(j => Math.hypot(S.P[j].x - c.x, S.P[j].z - c.z));
+    return { round: i + 1, sts: row.length,
+      r: +(r.reduce((a, b) => a + b) / r.length).toFixed(2), y: +c.y.toFixed(2) };
+  });
+}, hexTest: (ri = 3) => {
+  const S = solve(rounds, rounds.length - 1), c = S.mid[ri];
+  const r = S.idx[ri].map(j => Math.hypot(S.P[j].x - c.x, S.P[j].z - c.z));
+  const mean = r.reduce((a, b) => a + b) / r.length;
+  // count local maxima of radius around the round: 6 of them means the six
+  // stacked increase columns have pushed the circle into a hexagon, which is
+  // what real amigurumi does when increases are not staggered
+  let peaks = 0;
+  for (let k = 0; k < r.length; k++) {
+    const a = r[(k - 1 + r.length) % r.length], b = r[(k + 1) % r.length];
+    if (r[k] > a && r[k] >= b && r[k] > mean) peaks++;
+  }
+  return { round: ri + 1, peaks, mean: +mean.toFixed(3),
+           swing: +((Math.max(...r) - Math.min(...r)) / mean * 100).toFixed(1) };
+}, seed: (top = rounds.length - 1) =>
+  seed(rounds, top).map((L, i) => ({ round: i + 1, r: +L.rad.toFixed(2), y: +L.z.toFixed(2) })) };
+
+
+// ---- stitch library ------------------------------------------------------
+// One yarn centreline per stitch type, in a local unit cell: x runs along the
+// round, y is up with this stitch's top at 0 and its parent's top at -1, and z
+// points out of the fabric. Depth stays near Storck's D/L of 0.24.
+//
+// Each path enters at x -0.5 and leaves at x +0.5 on the front face, so
+// consecutive stitches hand the yarn to each other and a round is one strand.
+// What makes it read as crochet rather than knitting: the post sits to the LEFT
+// of the top bight (on the right side of the work the V lies right of its post),
+// and the yarn dips under the parent's front loop and then behind its back loop
+// instead of just pointing at it.
+const CELL = {
+  // single crochet: short post, anchor under both parent loops, bight across the top
+  sc: [
+    [-0.50,  0.00,  +0.116],   // handed over by the previous stitch
+    [-0.46, -0.18,  +0.068],   // post starts, left of the bight
+    [-0.42, -0.60, -0.014],   // post descends, leaning back
+    [-0.34, -0.94,  +0.122],   // under the parent's front loop
+    [-0.22, -1.00, -0.109],   // and behind its back loop: the anchor
+    [-0.12, -0.62, -0.136],   // pulled back up behind
+    [-0.04, -0.10, -0.122],
+    [ 0.20,  0.02, -0.109],   // the bight runs along the top of the stitch
+    [ 0.44,  0.01, -0.054],
+    [ 0.54,  0.00,  +0.034],   // around the end of the bight
+    [ 0.50,  0.00,  +0.116],   // handed on to the next stitch
+  ],
+  // slip stitch: no post at all, so it lies almost flat on the round below and
+  // reads as a chain-like ridge rather than an open V. Height is the tunable
+  // here; sources put it between 0.15 and 0.33 of an sc and none of them measured it.
+  sl: [
+    [-0.50,  0.00,  +0.102],
+    [-0.40, -0.10,  +0.041],
+    [-0.30, -0.18,  +0.116],   // straight under the parent, no vertical run
+    [-0.18, -0.22, -0.095],
+    [-0.06, -0.10, -0.109],
+    [ 0.16, -0.02, -0.102],
+    [ 0.40, -0.02, -0.048],
+    [ 0.50, -0.02,  +0.034],
+    [ 0.50, -0.01,  +0.102],
+  ],
+  // chain: no parent and no post. A flat braid of nested Vs, with the back bump
+  // behind. Used for the legs, where it is worked free rather than into fabric.
+  ch: [
+    [-0.50,  0.00,  +0.095],
+    [-0.30,  0.10,  +0.116],   // the V opens
+    [-0.06,  0.13,  +0.068],
+    [ 0.06,  0.10, -0.041],
+    [ 0.10,  0.02, -0.116],   // back bump, behind the work
+    [ 0.02, -0.08, -0.095],
+    [-0.10, -0.12,  +0.014],
+    [ 0.10, -0.10,  +0.102],
+    [ 0.34, -0.02,  +0.116],
+    [ 0.50,  0.00,  +0.095],
+  ],
+};
+const CELL_FOR = { sc: 'sc', inc: 'sc', dec: 'sc', sl: 'sl', ch: 'ch' };
+
+// ---- scene ---------------------------------------------------------------
+const view = document.getElementById('view');
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0e0f12);
+const cam = new THREE.PerspectiveCamera(42, 1, 0.1, 200);
+cam.position.set(7, 5, 11);
+// preserveDrawingBuffer lets the canvas be read back for snapshots
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+view.appendChild(renderer.domElement);
+const controls = new OrbitControls(cam, renderer.domElement);
+controls.enableDamping = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+scene.environment = new THREE.PMREMGenerator(renderer)
+  .fromScene(new RoomEnvironment(), 0.04).texture;
+scene.add(new THREE.HemisphereLight(0xffffff, 0x222833, 0.7));
+const key = new THREE.DirectionalLight(0xfff0e0, 1.3); key.position.set(6, 10, 8); scene.add(key);
+
+// twisted-ply normal map: diagonal stripes wrapped round the tube read as yarn
+function plyNormalMap() {
+  const c = document.createElement('canvas'); c.width = c.height = 64;
+  const x = c.getContext('2d');
+  x.fillStyle = '#8080ff'; x.fillRect(0, 0, 64, 64);
+  for (let i = -64; i < 128; i += 8) {
+    const g = x.createLinearGradient(i, 0, i + 8, 64);
+    g.addColorStop(0, '#4040ff'); g.addColorStop(0.5, '#c0c0ff'); g.addColorStop(1, '#4040ff');
+    x.strokeStyle = g; x.lineWidth = 7; x.beginPath();
+    x.moveTo(i, 0); x.lineTo(i + 64, 64); x.stroke();
+  }
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(140, 2);
+  return t;
+}
+const ply = plyNormalMap();
+const mat = c => new THREE.MeshStandardMaterial({
+  color: c, roughness: 0.95, metalness: 0,
+  normalMap: ply, normalScale: new THREE.Vector2(0.9, 0.9),
+});
+const done = mat(0xe8681c);      // rounds already worked
+const fresh = mat(0xffc23d);     // the round this step adds
+const dark = new THREE.MeshPhysicalMaterial({ color: 0x0b0b0d, roughness: 0.15, clearcoat: 1 });
+const group = new THREE.Group(); scene.add(group);
+const tube = (pts, r, seg) => new THREE.TubeGeometry(
+  new THREE.CatmullRomCurve3(pts), Math.max(pts.length * 3, seg || 8), r, 7, false);
+
+// One stitch = the top chain (the V the next round hooks through) plus a post
+// dipping into its parent loop. That shape is what reads as crochet, not knit.
+// Crochet is ONE continuous strand, so each stitch's cell is placed in a frame
+// built from its own neighbours and then handed to the next. An invisible
+// decrease anchors to two parent loops pulled together, which is what the mean
+// of its parents is; on the surface it is meant to look like an ordinary sc,
+// and here it does, because it uses the same cell.
+function stitchPath(S, rs, i, k) {
+  const n = rs[i].count, st = rs[i].sts[k], p = S.P[S.idx[i][k]];
+  const nxt = S.P[S.idx[i][(k + 1) % n]], prv = S.P[S.idx[i][(k - 1 + n) % n]];
+
+  const anchor = new THREE.Vector3();
+  if (i) {
+    for (const par of st.parents) anchor.add(S.P[S.idx[i-1][par]]);
+    anchor.divideScalar(st.parents.length);
+  } else anchor.copy(S.mid[i]).setY(p.y - RH);     // round 1 hangs off the ring
+
+  const X = new THREE.Vector3().subVectors(nxt, prv).normalize();
+  const Y = new THREE.Vector3().subVectors(p, anchor);
+  const sy = Y.length() || RH; Y.divideScalar(sy);
+  const Z = new THREE.Vector3().crossVectors(X, Y).normalize();
+  if (Z.dot(new THREE.Vector3().subVectors(p, S.mid[i])) < 0) Z.negate();
+  const sx = p.distanceTo(nxt);
+
+  return CELL[CELL_FOR[st.op] || 'sc'].map(([lx, ly, lz]) => p.clone()
+    .addScaledVector(X, lx * sx).addScaledVector(Y, ly * sy).addScaledVector(Z, lz * sx));
+}
+
+// one tube per round: the cells already meet end to end, so a round is a single
+// closed strand rather than a bag of disconnected stitches
+function roundGeometry(S, rs, i) {
+  const pts = [];
+  for (let k = 0; k < rs[i].count; k++) pts.push(...stitchPath(S, rs, i, k));
+  return new THREE.TubeGeometry(
+    new THREE.CatmullRomCurve3(pts, true), pts.length * 2, YARN, 8, true);
+}
+
+function yarnGeometry(S, rs, from, to) {
+  const parts = [];
+  for (let i = from; i <= to; i++) parts.push(roundGeometry(S, rs, i));
+  return parts.length ? mergeGeometries(parts) : null;
+}
+
+const clawSolved = solve(clawRounds, clawRounds.length - 1, 0.008);
+const clawGeo = yarnGeometry(clawSolved, clawRounds, 0, clawRounds.length - 1);
+clawGeo.computeBoundingBox();
+const CLAW_TIP = clawGeo.boundingBox.min.y;   // the ch 2 end, which gets sewn on
+let front = new THREE.Vector3(0, 0, 1);   // set from the eyes; the camera faces it
+
+// The cinched loop at the centre. Without it the first rounds read as a hole,
+// which is the opposite of what "pull the magic ring tight" produces: the tail
+// closes it, and the yarn of the ring itself stays visible between the bases of
+// the six stitches.
+function magicRing(S, rs, mat) {
+  const c = S.mid[0], n = rs[0].count, pts = [];
+  const lift = RH * 0.55;
+  for (let k = 0; k < n * 2; k++) {
+    const a = (k / (n * 2)) * Math.PI * 2;
+    const wob = k % 2 ? 0.055 : -0.055;          // it threads each stitch base
+    pts.push(new THREE.Vector3(
+      c.x + Math.cos(a) * (YARN * 1.5 + 0.06),
+      c.y - lift + wob,
+      c.z + Math.sin(a) * (YARN * 1.5 + 0.06)));
+  }
+  return new THREE.Mesh(new THREE.TubeGeometry(
+    new THREE.CatmullRomCurve3(pts, true), 80, YARN * 0.82, 7, true), mat);
+}
+
+function build(step) {
+  group.clear();
+  const st = steps[step];
+
+  // while the claws are being made, the claw is the subject
+  if (st.piece === 'claw') {
+    const S = solve(clawRounds, st.ri, 0.008);
+    const old = yarnGeometry(S, clawRounds, 0, st.ri - 1);
+    if (old) group.add(new THREE.Mesh(old, done));
+    group.add(new THREE.Mesh(yarnGeometry(S, clawRounds, st.ri, st.ri),
+      st.annot ? done : fresh));
+    return;
+  }
+
+  const top = st.ri, S = solve(rounds, top);
+  const at = (i, k) => S.P[S.idx[i][k % rounds[i].count]];
+  const face = k => at(3, k).clone().lerp(at(4, k), 0.5);   // between rounds 4 and 5
+
+  const old = yarnGeometry(S, rounds, 0, top - 1);
+  if (old) group.add(new THREE.Mesh(old, done));
+  group.add(new THREE.Mesh(yarnGeometry(S, rounds, top, top), st.annot ? done : fresh));
+  group.add(magicRing(S, rounds, top === 0 ? fresh : done));
+
+  const upto = steps.slice(0, step + 1);
+
+  // The pattern defines the front for us: legs go in at 0-2 and 12-14, and the
+  // nine sl sts between them (3-11) are Clawd's face. So the face centres on
+  // stitch 7, and the eyes sit 5 apart either side of it. Deriving this beats
+  // eyeballing an index, and it is why they were previously on the wrong side.
+  const FACE = 7, EYES = [FACE - 2, FACE + 3], CLAWS = [FACE - 3, FACE + 4];
+  const onSurface = (i, k, lift) => {
+    const p = at(i, k).clone(), out = p.clone().sub(S.mid[i]).normalize();
+    return p.addScaledVector(out, lift);
+  };
+
+  if (upto.some(r => r.eyes)) {
+    for (const k of EYES) {
+      const p = onSurface(4, k, YARN + 0.26);
+      const e = new THREE.Mesh(new THREE.SphereGeometry(0.4, 24, 18), dark);
+      e.position.copy(p);
+      group.add(e);
+    }
+  }
+  // the pattern defines the front as the side carrying the 9 sl sts between the
+  // two sets of legs, so derive it rather than guessing an index. Round 5 only
+  // exists once the body is done, hence the guard.
+  if (top >= 4) front.copy(at(4, FACE)).sub(S.mid[4]).setY(0).normalize();
+
+  const legStep = upto.find(r => r.legs);
+  if (legStep) {
+    for (const k of legStep.legs) {
+      const base = onSurface(legStep.ri, k, YARN);
+      const out = base.clone().sub(S.mid[legStep.ri]).setY(0).normalize();
+      const side0 = new THREE.Vector3(-out.z, 0, out.x);
+      // ch 4, then slip stitched back down 3 of those chains. That makes a
+      // rounded cord with one seam ridge where the return line meets the chain,
+      // and it spirals slightly, so the frame twists as it goes out.
+      const LINKS = 4, LINK = SW * 0.95, TWIST = 0.42, pts = [];
+      const frameAt = (c, ret) => {
+        const t = c / LINKS;
+        const a = c * TWIST + (ret ? Math.PI : 0);
+        const o = base.clone().addScaledVector(out, c * LINK)
+          .addScaledVector(new THREE.Vector3(0, 1, 0), -t * t * LINK * 0.8);
+        const side = side0.clone().multiplyScalar(Math.cos(a))
+          .addScaledVector(new THREE.Vector3(0, 1, 0), Math.sin(a)).normalize();
+        return { o, X: out, Y: side, Z: new THREE.Vector3().crossVectors(out, side) };
+      };
+      const lay = (cell, c, ret) => {
+        const f = frameAt(c, ret);
+        for (const [lx, ly, lz] of cell)
+          pts.push(f.o.clone().addScaledVector(f.X, lx * LINK)
+            .addScaledVector(f.Y, ly * LINK * 0.55).addScaledVector(f.Z, lz * LINK));
+      };
+      for (let c = 0; c < LINKS; c++) lay(CELL.ch, c + 0.5, false);      // chain out
+      for (let c = LINKS - 1; c >= 1; c--) lay(CELL.sl, c + 0.5, true);  // sl st back
+      group.add(new THREE.Mesh(
+        new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts, false), pts.length * 3, YARN, 8, false),
+        st === legStep ? fresh : done));
+    }
+  }
+  if (upto.some(r => r.claws)) {
+    for (const k of CLAWS) {
+      // sewn on at an angle pointing in, and they stand proud of the body
+      const p = onSurface(4, k, YARN);
+      const out = p.clone().sub(S.mid[4]).setY(0).normalize();
+      // Raised pincers: mostly upward, leaning over the face and a little
+      // outward so the pair does not collide. "Sew them on at an angle,
+      // pointing in" is the pattern's own wording for this.
+      const dir = new THREE.Vector3(0, 1.85, 0)
+        .addScaledVector(out, 0.8).addScaledVector(front, 0.25).normalize();
+      // The body gets polyfil; the claws never do. An unstuffed piece this small
+      // lies flat rather than holding a tube, which is why the real ones read as
+      // narrow pincers and a round solve of the same stitch counts does not.
+      const SCALE = 0.85;
+      const claw = new THREE.Mesh(clawGeo, st.claws ? fresh : done);
+      claw.scale.set(SCALE * 0.6, SCALE * 1.08, SCALE * 0.92);
+      claw.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir);
+      // the narrow ch-2 end is what gets sewn down, so seat that on the surface
+      claw.position.copy(p).addScaledVector(dir, -CLAW_TIP * SCALE * 1.08 - 0.1);
+      group.add(claw);
+    }
+  }
+}
+
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, cam));
+const ao = new GTAOPass(scene, cam, 1, 1);
+// AO radius is stitch-scale, not scene-scale. The dark gaps between loops are
+// most of what makes this read as fabric rather than plastic.
+ao.updateGtaoMaterial({ radius: 0.35, distanceExponent: 1, scale: 1.4, samples: 16 });
+composer.addPass(ao);
+composer.addPass(new OutputPass());
+
+// Default view matches the pattern photos: looking down on the shell from the
+// front, so the spiral and both eyes are visible. Once the user orbits, their
+// angle is theirs and we only re-fit the distance.
+let orbited = false;
+controls.addEventListener('start', () => { orbited = true; });
+function frame() {
+  const box = new THREE.Box3().setFromObject(group);
+  if (box.isEmpty()) return;
+  const c = box.getCenter(new THREE.Vector3());
+  const r = box.getBoundingSphere(new THREE.Sphere()).radius;
+  const dist = r / Math.sin(THREE.MathUtils.degToRad(cam.fov) / 2) * 1.25;
+  // Low front three-quarter, about 28 degrees up, which is how the pattern
+  // photos are shot. Looking down from steeper foreshortens the raised claws
+  // into nothing and flattens the body into a disc.
+  const dir = orbited ? cam.position.clone().sub(controls.target).normalize()
+    : front.clone().setY(0).normalize()
+        .addScaledVector(new THREE.Vector3(0, 1, 0), 0.53).normalize();
+  cam.position.copy(c).addScaledVector(dir, dist);
+  controls.target.copy(c);
+  controls.update();
+}
+
+function resize() {
+  const w = view.clientWidth, h = view.clientHeight;
+  renderer.setSize(w, h); renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  composer.setSize(w, h);
+  cam.aspect = w / h; cam.updateProjectionMatrix();
+}
+addEventListener('resize', resize); resize();
+(function loop() { requestAnimationFrame(loop); controls.update(); composer.render(); })();
+
+// ---- ui ------------------------------------------------------------------
+const $ = id => document.getElementById(id);
+let step = 0;
+
+// The rail is the whole map: three sections, one bar per step, always visible.
+// It replaces both the progress bar and the expand-on-click menu, so "where am
+// I" never costs a click and never changes shape.
+function drawRail() {
+  $('rail').innerHTML = SECTIONS.map(name => {
+    const own = steps.map((s, i) => [s, i]).filter(([s]) => s.section === name);
+    const here = own.some(([, i]) => i === step);
+    return `<div class="sec ${here ? 'here' : ''}">
+      <span class="sec-name">${SECTION_LABEL[name]}</span>
+      <span class="dots">${own.map(([s, i]) =>
+        `<button class="dot ${i === step ? 'now' : i < step ? 'past' : ''}"
+           data-go="${i}" title="${name}: ${s.label}"
+           ${i === step ? 'aria-current="step"' : ''}
+           aria-label="${name}, ${s.label}${i === step ? ', current step' : ''}"></button>`).join('')}</span>
+    </div>`;
+  }).join('');
+}
+
+function show(n) {
+  step = Math.max(0, Math.min(steps.length - 1, n));
+  const r = steps[step], after = steps[step + 1];
+
+  $('inst').textContent = r.text;
+  $('note').textContent = r.note || '';
+  // only compare against the previous round of the SAME piece: a claw starts
+  // its own magic ring and has no relationship to the round before it
+  const was = steps.slice(0, step)
+    .filter(x => !x.annot && x.piece === r.piece && x.section === r.section).at(-1);
+  const delta = was && was.count !== r.count
+    ? `<sub>${was.count < r.count ? 'up' : 'down'} from ${was.count}</sub>` : '';
+  $('count').innerHTML = r.annot || !r.count ? ''
+    : `${r.count} sts <span>at the end of this round</span> ${delta}`;
+
+  const res = $('res');
+  res.hidden = !(r.help || []).length;
+  res.querySelector('ul').innerHTML = (r.help || []).map(k => {
+    const [name, video, article] = RES[k];
+    return `<li><b>${name}</b>
+      <a href="${video}" target="_blank" rel="noopener"
+         aria-label="Watch ${name}, opens in a new tab">Watch</a>
+      <a href="${article}" target="_blank" rel="noopener"
+         aria-label="Read about ${name}, opens in a new tab">Read</a></li>`;
+  }).join('');
+
+  // the primary control names what is coming, so nobody steps into the dark
+  $('next').innerHTML = after
+    ? `<span>Next <em>· ${after.section === r.section ? after.label
+        : after.section + ', ' + after.label}</em></span>
+       <span class="arrow">&#8594;</span>`
+    : 'Clawd is finished';
+  $('next').disabled = !after;
+  $('prev').disabled = step === 0;
+  // the 3D view carries information, so describe it for anyone who cannot see it
+  $('view').setAttribute('aria-label',
+    `Three-dimensional view of the piece at ${r.section}, ${r.label}` +
+    (r.count ? `, ${r.count} stitches` : '') +
+    '. Every instruction is also written in this panel.');
+  drawRail();
+  build(step);
+  frame();
+}
+
+// shown once per browser, reopenable from the footer at any time
+const about = $('about');
+$('openAbout').onclick = () => about.showModal();
+try {
+  if (!localStorage.getItem('clawd-seen')) about.showModal();
+  about.addEventListener('close', () => localStorage.setItem('clawd-seen', '1'));
+} catch { /* private mode: just skip the intro rather than breaking the page */ }
+
+$('rail').onclick = e => { if (e.target.dataset.go) show(+e.target.dataset.go); };
+$('prev').onclick = () => show(step - 1);
+$('next').onclick = () => show(step + 1);
+addEventListener('keydown', e => {
+  if (about.open || e.metaKey || e.ctrlKey || e.altKey) return;
+  // e.target is not always an Element (window, document), and calling closest
+  // on those throws and kills the handler
+  const el = e.target instanceof Element ? e.target : null;
+  if (el && el.closest('input, textarea, select, [contenteditable]')) return;
+  if (e.key === 'ArrowLeft') { e.preventDefault(); show(step - 1); }
+  if (e.key === 'ArrowRight') { e.preventDefault(); show(step + 1); }
+});
+show(0);
+</script>
+</body>
+</html>
