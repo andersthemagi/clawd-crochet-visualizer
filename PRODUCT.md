@@ -39,6 +39,12 @@ instructions produce rather than an illustration of it.
 
 ## Operating Context
 
+- Built for a crochet session at Claude Community House (https://claudebcn.com),
+  Barcelona, 21 to 24 September 2026: a free, community-run week of Claude
+  workshops hosted by the European Claude ambassadors. It is **not** an official
+  Anthropic event, though Anthropic staff attend, so nothing in the product may
+  imply Anthropic endorsement. Andrés is a volunteer there, not a booked speaker.
+
 - Used alongside physical work, not instead of it. Hands are occupied; glances
   are short; the screen may be at arm's length on a table or propped phone.
 - The pattern is worked in continuous rounds with a stitch marker, so "which

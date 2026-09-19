@@ -1,8 +1,12 @@
-# Clawd the Crab, round by round
+# Crochet your own Clawd
 
 A 3D walkthrough of the free **Clawd the Crab** amigurumi pattern. Each step
 shows one instruction and renders the piece as it should look at that point,
 built from the pattern's own stitch counts rather than modelled by hand.
+
+Made for [Claude Community House](https://claudebcn.com), a free community-run
+week of Claude workshops in Barcelona, 21 to 24 September 2026. That event is
+run by the European Claude ambassadors and is not an official Anthropic event.
 
 Live: https://clawd.redmage.cc
 
