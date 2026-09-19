@@ -138,16 +138,50 @@
   #openAbout:hover { color:var(--hot); }
 
   #about {
-    max-width:440px; width:calc(100% - 40px); padding:36px; border:1px solid var(--line);
-    background:var(--panel); color:var(--fg);
+    max-width:460px; width:calc(100% - 32px); max-height:calc(100dvh - 32px);
+    padding:0; border:1px solid var(--line);
+    background:var(--panel); color:var(--fg); overflow:auto; overscroll-behavior:contain;
   }
-  #about::backdrop { background:rgba(6,7,9,.78); }
-  #about img { display:block; margin-bottom:22px; }
-  #about h2 { margin:0 0 18px; font-size:24px; font-weight:500; letter-spacing:-.012em; }
-  #about p { margin:0 0 16px; font-size:15px; line-height:1.6; color:#c9c7c1; }
-  #about .fine { font-size:13px; color:var(--dim); margin-bottom:28px; }
+  #about::backdrop { background:rgba(6,7,9,.8); }
+  #about { scrollbar-width:thin; scrollbar-color:#3a3c47 transparent; }
+  #about::-webkit-scrollbar { width:10px; }
+  #about::-webkit-scrollbar-thumb { background:#3a3c47; }
+  #about::-webkit-scrollbar-track { background:transparent; }
+  #banner {
+    display:block; width:100%; height:170px; object-fit:cover;
+    object-position:center 72%;   /* centred on the crab, not the empty sky */
+    border-bottom:1px solid var(--line);
+  }
+  .about-body { padding:28px; }
+  #about h2:focus { outline:none; }
+  #about h2 { margin:0 0 14px; font-size:24px; font-weight:500; letter-spacing:-.012em; }
+  #about h3 {
+    margin:26px 0 12px; font-size:12px; font-weight:500; letter-spacing:.07em;
+    text-transform:uppercase; color:var(--dim);
+  }
+  #about p { margin:0 0 14px; font-size:15px; line-height:1.6; color:#c9c7c1; }
+  #about .fine { font-size:13px; color:var(--dim); }
   #about a { color:var(--fg); text-underline-offset:3px; }
   #about a:hover { color:var(--hot); }
+
+  ol.how { margin:0 0 18px; padding:0; list-style:none; counter-reset:how; }
+  ol.how li {
+    position:relative; counter-increment:how; margin-bottom:12px;
+    padding-left:34px; font-size:15px; line-height:1.55; color:#c9c7c1;
+  }
+  ol.how li::before {
+    content:counter(how); position:absolute; left:0; top:0;
+    width:22px; height:22px; border:1px solid var(--line); color:var(--hot);
+    font-size:12px; font-variant-numeric:tabular-nums;
+    display:flex; align-items:center; justify-content:center;
+  }
+  ol.how b { color:var(--fg); font-weight:500; }
+
+  .credit-line { font-size:13px; color:var(--dim); margin-bottom:10px; }
+  .credit-line strong { color:var(--fg); font-weight:500; }
+  .credit-line.by { display:flex; gap:11px; align-items:flex-start; margin-bottom:26px; }
+  .credit-line.by img { flex:none; margin-top:2px; }
+
   #about button {
     width:100%; min-height:52px; padding:14px; background:var(--hot); border:none;
     color:#18140a; font:inherit; font-size:15px; font-weight:600; cursor:pointer;
@@ -198,6 +232,7 @@
   }
   /* a short viewport (phone in landscape, split screen) has no vertical room
      to spare, so the chrome gives it back to the instruction */
+  @media (max-height:600px) { #banner { height:104px; } .about-body { padding:20px; } }
   @media (max-height:520px) {
     #railtitle { display:none; }
     #rail { padding:12px var(--pad) 10px; }
@@ -251,25 +286,39 @@
     </footer>
   </aside>
   <dialog id="about" aria-labelledby="aboutTitle">
-    <img src="logo.png" alt="" width="40" height="43">
-    <h2 id="aboutTitle">See the pattern before you make it</h2>
-    <p>Every round of Clawd the Crab is in here. Each step gives you one
-      instruction and builds the piece in 3D as it should look at that point, so
-      you can hold your work up and compare. Free, no account, runs in this
-      browser.</p>
-    <p>Move between steps with the Back and Next buttons, your keyboard arrow
-      keys, or the step bars in the panel. Drag the model to turn it. Grey is
-      what you have already worked, and the round you are on right now is yellow.</p>
-    <p>The model shows stitch placement and shape, not the texture of real yarn.
-      Yours will look softer than this.</p>
-    <p class="fine">The pattern is by
-      <a href="https://www.chrisettedesigns.com/patterns/clawd-the-crab-free-crochet-pattern/"
-         target="_blank" rel="noopener">Chrisette Designs</a> and is free on their
-      site. This tool was made by Andrés at
-      <a href="https://contra.com/andersthemagi" target="_blank" rel="noopener">Red
-      Mage</a>, a one-person studio in Barcelona that builds things like it for
-      clients.</p>
-    <form method="dialog"><button autofocus>Start crocheting</button></form>
+    <img id="banner" src="clawd-photo.webp" width="1254" height="1254"
+         alt="The finished Clawd, crocheted in orange with black safety eyes, sitting on a
+              rooftop bar table in Barcelona with the Sagrada Família behind him at sunset.">
+    <div class="about-body">
+      <h2 id="aboutTitle" tabindex="-1" autofocus>See the pattern before you make it</h2>
+      <p>A written crochet pattern asks you to picture a shape you have never seen.
+        This builds it in 3D from the instructions, one round at a time. Free, no
+        account, runs in this browser.</p>
+
+      <h3>How to use it</h3>
+      <ol class="how">
+        <li><b>Read the round you are on.</b> One instruction at a time, with the
+          stitch count you should end on.</li>
+        <li><b>Check it against the model.</b> Grey is what you have already
+          worked. The round you are on right now is yellow.</li>
+        <li><b>Hit Next when that round is done.</b> Arrow keys work too, and the
+          bars at the top jump to any step.</li>
+      </ol>
+      <p class="fine">The model shows stitch placement and shape, not the texture of
+        real yarn. Yours will look softer than this.</p>
+
+      <p class="credit-line"><strong>The pattern</strong> is Clawd the Crab by
+        <a href="https://www.chrisettedesigns.com/patterns/clawd-the-crab-free-crochet-pattern/"
+           target="_blank" rel="noopener">Chrisette Designs</a>, free on their site.
+        It is theirs, not ours.</p>
+      <p class="credit-line by"><img src="logo.png" alt="" width="26" height="28">
+        <span><strong>This viewer</strong> was built by Andrés at
+        <a href="https://contra.com/andersthemagi" target="_blank" rel="noopener">Red
+        Mage</a>, a one-person studio in Barcelona that builds things like it for
+        clients.</span></p>
+
+      <form method="dialog"><button>Start crocheting</button></form>
+    </div>
   </dialog>
 </div>
 
