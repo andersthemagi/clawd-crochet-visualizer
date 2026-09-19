@@ -148,25 +148,25 @@
   #about::-webkit-scrollbar-thumb { background:#3a3c47; }
   #about::-webkit-scrollbar-track { background:transparent; }
   #banner {
-    display:block; width:100%; height:170px; object-fit:cover;
+    display:block; width:100%; height:150px; object-fit:cover;
     object-position:center 72%;   /* centred on the crab, not the empty sky */
     border-bottom:1px solid var(--line);
   }
-  .about-body { padding:28px; }
+  .about-body { padding:26px; }
   #about h2:focus { outline:none; }
-  #about h2 { margin:0 0 14px; font-size:24px; font-weight:500; letter-spacing:-.012em; }
+  #about h2 { margin:0 0 12px; font-size:23px; font-weight:500; letter-spacing:-.012em; }
   #about h3 {
-    margin:26px 0 12px; font-size:12px; font-weight:500; letter-spacing:.07em;
+    margin:20px 0 10px; font-size:12px; font-weight:500; letter-spacing:.07em;
     text-transform:uppercase; color:var(--dim);
   }
-  #about p { margin:0 0 14px; font-size:15px; line-height:1.6; color:#c9c7c1; }
+  #about p { margin:0 0 12px; font-size:15px; line-height:1.6; color:#c9c7c1; }
   #about .fine { font-size:13px; color:var(--dim); }
   #about a { color:var(--fg); text-underline-offset:3px; }
   #about a:hover { color:var(--hot); }
 
-  ol.how { margin:0 0 18px; padding:0; list-style:none; counter-reset:how; }
+  ol.how { margin:0 0 14px; padding:0; list-style:none; counter-reset:how; }
   ol.how li {
-    position:relative; counter-increment:how; margin-bottom:12px;
+    position:relative; counter-increment:how; margin-bottom:10px;
     padding-left:34px; font-size:15px; line-height:1.55; color:#c9c7c1;
   }
   ol.how li::before {
@@ -179,14 +179,27 @@
 
   .credit-line { font-size:13px; color:var(--dim); margin-bottom:10px; }
   .credit-line strong { color:var(--fg); font-weight:500; }
-  .credit-line.by { display:flex; gap:11px; align-items:flex-start; margin-bottom:26px; }
+  .credit-line.by { display:flex; gap:11px; align-items:flex-start; margin-bottom:20px; }
   .credit-line.by img { flex:none; margin-top:2px; }
 
-  #about button {
-    width:100%; min-height:52px; padding:14px; background:var(--hot); border:none;
-    color:#18140a; font:inherit; font-size:15px; font-weight:600; cursor:pointer;
+  .actions { display:flex; gap:10px; }
+  .actions form { display:contents; }
+  .actions .primary, .actions .secondary {
+    display:flex; align-items:center; justify-content:center; text-align:center;
+    flex:1; min-height:52px; padding:14px 12px; font:inherit; font-size:15px;
+    text-decoration:none; cursor:pointer; transition:filter .15s, border-color .15s, color .15s;
   }
-  #about button:hover { filter:brightness(1.12); }
+  .actions .primary {
+    background:var(--hot); border:1px solid var(--hot); color:#18140a; font-weight:600;
+  }
+  .actions .primary:hover { filter:brightness(1.12); }
+  .actions .secondary {
+    background:none; border:1px solid var(--line); color:var(--dim);
+  }
+  .actions .secondary:hover { border-color:var(--hot); color:var(--hot); }
+  .actions .secondary::after { content:' \2197'; margin-left:7px; }
+  /* side by side they wrap onto two lines on a phone, so stack instead */
+  @media (max-width:430px) { .actions { flex-direction:column; } }
   #credit a { color:var(--dim); }
 
   .sr-only {
@@ -304,8 +317,8 @@
         <li><b>Hit Next when that round is done.</b> Arrow keys work too, and the
           bars at the top jump to any step.</li>
       </ol>
-      <p class="fine">The model shows stitch placement and shape, not the texture of
-        real yarn. Yours will look softer than this.</p>
+      <p class="fine">The model shows stitch placement and shape, not yarn texture. Yours
+        will look softer.</p>
 
       <p class="credit-line"><strong>The pattern</strong> is Clawd the Crab by
         <a href="https://www.chrisettedesigns.com/patterns/clawd-the-crab-free-crochet-pattern/"
@@ -314,10 +327,14 @@
       <p class="credit-line by"><img src="logo.png" alt="" width="26" height="28">
         <span><strong>This viewer</strong> was built by Andrés at
         <a href="https://contra.com/andersthemagi" target="_blank" rel="noopener">Red
-        Mage</a>, a one-person studio in Barcelona that builds things like it for
-        clients.</span></p>
+        Mage</a>, a one-person studio in Barcelona building websites, automations
+        and AI for people who care about how AI is applied.</span></p>
 
-      <form method="dialog"><button>Start crocheting</button></form>
+      <div class="actions">
+        <form method="dialog"><button class="primary">Start crocheting</button></form>
+        <a class="secondary" href="https://contra.com/andersthemagi"
+           target="_blank" rel="noopener">Work with Andrés</a>
+      </div>
     </div>
   </dialog>
 </div>
