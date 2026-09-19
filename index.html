@@ -148,11 +148,11 @@
   #about::-webkit-scrollbar-thumb { background:#3a3c47; }
   #about::-webkit-scrollbar-track { background:transparent; }
   #banner {
-    display:block; width:100%; height:150px; object-fit:cover;
+    display:block; width:100%; height:100px; object-fit:cover;
     object-position:center 72%;   /* centred on the crab, not the empty sky */
     border-bottom:1px solid var(--line);
   }
-  .about-body { padding:24px 26px 20px; }
+  .about-body { padding:22px 26px 14px; }
   #about h2:focus { outline:none; }
   #about h2 { margin:0 0 12px; font-size:23px; font-weight:500; letter-spacing:-.012em; }
   #about h3 {
@@ -164,7 +164,7 @@
   #about a { color:var(--fg); text-underline-offset:3px; }
   #about a:hover { color:var(--hot); }
 
-  ol.how { margin:0 0 14px; padding:0; list-style:none; counter-reset:how; }
+  ol.how { margin:14px 0 14px; padding:0; list-style:none; counter-reset:how; }
   ol.how li {
     position:relative; counter-increment:how; margin-bottom:10px;
     padding-left:34px; font-size:15px; line-height:1.55; color:#c9c7c1;
@@ -177,7 +177,7 @@
   }
   ol.how b { color:var(--fg); font-weight:500; }
 
-  .credit-line { font-size:13px; line-height:1.55; color:var(--dim); margin-bottom:9px; }
+  .credit-line { font-size:12.5px; line-height:1.5; color:var(--dim); margin-bottom:7px; }
   .credit-line strong { color:var(--fg); font-weight:500; }
   .credit-line.by { display:flex; gap:11px; align-items:flex-start; margin-bottom:16px; }
   .credit-line.by img { flex:none; margin-top:2px; }
@@ -313,34 +313,26 @@
               rooftop bar table in Barcelona with the Sagrada Família behind him at sunset.">
     <div class="about-body">
       <h2 id="aboutTitle" tabindex="-1" autofocus>Crochet your own Clawd</h2>
-      <p>A written crochet pattern asks you to picture a shape you have never seen.
-        This builds it in 3D from the instructions, one round at a time. Free, no
-        account, runs in this browser.</p>
+      <p>See every round of the pattern in 3D before you work it. Free, no account,
+        runs in this browser.</p>
 
-      <h3>How to use it</h3>
       <ol class="how">
-        <li><b>Read the round you are on.</b> One instruction at a time, with the
-          stitch count you should end on.</li>
-        <li><b>Check it against the model.</b> Grey is what you have already
-          worked. The round you are on right now is yellow.</li>
-        <li><b>Hit Next when that round is done.</b> Arrow keys work too, and the
-          bars at the top jump to any step.</li>
+        <li><b>Read the round you are on</b>, and the stitch count to end on.</li>
+        <li><b>Check it against the model.</b> Grey is worked, yellow is this round.</li>
+        <li><b>Hit Next when it is done.</b> Arrow keys and the top bars work too.</li>
       </ol>
-      <p class="fine">The model shows stitch placement and shape, not yarn texture.</p>
 
-      <p class="credit-line"><strong>Made for</strong>
-        <a href="https://claudebcn.com" target="_blank" rel="noopener">Claude Community
-        House</a>, a free community-run week of Claude workshops in Barcelona,
-        21 to 24 September 2026.</p>
-      <p class="credit-line"><strong>The pattern</strong> is Clawd the Crab by
+      <p class="credit-line">Pattern: <strong>Clawd the Crab</strong> by
         <a href="https://www.chrisettedesigns.com/patterns/clawd-the-crab-free-crochet-pattern/"
-           target="_blank" rel="noopener">Chrisette Designs</a>, free on their site.
-        It is theirs, not ours.</p>
+           target="_blank" rel="noopener">Chrisette Designs</a>. It is theirs, not ours.</p>
+      <p class="credit-line">Made for
+        <a href="https://claudebcn.com" target="_blank" rel="noopener">Claude Community
+        House</a>, Barcelona, September 2026.</p>
       <p class="credit-line by"><img src="logo.png" alt="" width="26" height="28">
-        <span><strong>This viewer</strong> was built by Andrés at
+        <span>Built by Andrés at
         <a href="https://contra.com/andersthemagi" target="_blank" rel="noopener">Red
-        Mage</a>, a one-person studio in Barcelona building websites, automations
-        and AI for people who care about how AI is applied.</span></p>
+        Mage</a>: websites, automations and AI for people who care about how AI is
+        applied.</span></p>
 
       <div class="actions">
         <form method="dialog"><button class="primary">Start crocheting</button></form>
