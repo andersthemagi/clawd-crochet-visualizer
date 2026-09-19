@@ -63,10 +63,9 @@ instructions produce rather than an illustration of it.
 - The 3D view is WebGL via three.js from a CDN. Currently one self-contained
   HTML file with no build step. This is the present implementation, not a
   commitment: the user explicitly declined to make it binding.
-- Legs and claws are placed by stitch index rather than derived from the
-  pattern's own definition of the front (the side with the nine slip stitches).
-  This is a known approximation.
-- Undecided: whether the pattern text ships in full or the app links out for it.
+- The belly is optional in the source pattern: skipping it makes Clawd a flat
+  applique for a pin or patch. The viewer says so on the belly's first step.
+- Finished size per the pattern: about 6.0 cm wide by 5.7 cm long.
 
 ## Brand Commitments
 
@@ -79,10 +78,15 @@ instructions produce rather than an illustration of it.
 
 ## Evidence on Hand
 
-- The pattern and its photographs belong to Chrisette Designs:
+- The pattern belongs to Chrisette Designs (Lizette):
   https://www.chrisettedesigns.com/patterns/clawd-the-crab-free-crochet-pattern/
-  Attribution and a link back are non-negotiable. Whether the instruction text
-  can ship verbatim is an open permissions question, not a settled one.
+  Her stated terms, verified on the page 2026-09-19: "This pattern is NOT to be
+  SOLD. You may sell what you make, but must use your own photos and should
+  credit me by showing the link to my pattern here." This tool is free, uses its
+  own photography, credits her and links back throughout, so it sits inside
+  those terms. Settled, not open. Her photographs are a separate matter and are
+  not used. Contact: chrisettedesigns@yahoo.com, Ko-Fi at
+  https://ko-fi.com/chrisettedesigns.
 - Eleven technique resources (video plus article each), every URL verified
   2026-09-18. Six of the videos are Chrisette's own, embedded in the pattern.
 - The pattern page intermittently returns a WordPress database error, so any

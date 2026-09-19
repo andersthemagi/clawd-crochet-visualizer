@@ -17,9 +17,15 @@ published free on their site. It is theirs, not mine. This viewer reproduces the
 instructions with credit and links back to the original everywhere it appears,
 including six technique videos from Chrisette's own channel.
 
-**Open question before wider promotion:** whether the instruction text may be
-reproduced verbatim, or whether this should link out for the wording and show
-only the stitch counts. That has not been settled with the designer.
+Her stated terms on the pattern page, quoted in full:
+
+> This is a Chrisette Designs original design. This pattern is NOT to be SOLD.
+> You may sell what you make, but must use your own photos and should credit me
+> by showing the link to my pattern here.
+
+This tool is free, uses its own photography, credits her and links to the
+pattern from every screen. She asks for Ko-Fi support on the same page, so the
+viewer links that too.
 
 This viewer was built by Andrés at [Red Mage](https://contra.com/andersthemagi).
 
